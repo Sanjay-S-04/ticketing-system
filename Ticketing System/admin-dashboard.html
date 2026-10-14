@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central IT Administration &amp; Analytics | Bannari Amman Institute of Technology</title>
+  <meta name="description" content="Campus-wide helpdesk metrics, Chart.js ticket visualizations, manual review triage, and trusted user role provisioning.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <!-- Chart.js Official CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Dynamic Navigation Header -->
+  <div id="dashboard-nav-container"></div>
+
+  <main class="dashboard-main" role="main">
+    <div class="container">
+      <div class="dashboard-header">
+        <div>
+          <h1 class="page-title">Institutional IT Administration</h1>
+          <p class="page-subtitle">Real-time campus database analytics, triage routing, and role provisioning for Bannari Amman Institute of Technology.</p>
+        </div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <section class="stats-grid" aria-label="Campus-wide Ticket Statistics">
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">Total Tickets</div>
+            <div class="stat-value" id="stat-total">0</div>
+          </div>
+          <div class="stat-icon stat-icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">Open Tickets</div>
+            <div class="stat-value" id="stat-open">0</div>
+          </div>
+          <div class="stat-icon stat-icon-amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">In Progress</div>
+            <div class="stat-value" id="stat-progress">0</div>
+          </div>
+          <div class="stat-icon stat-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">Resolved</div>
+            <div class="stat-value" id="stat-resolved">0</div>
+          </div>
+          <div class="stat-icon stat-icon-green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">Manual Review</div>
+            <div class="stat-value" id="stat-review" style="color: var(--color-review);">0</div>
+          </div>
+          <div class="stat-icon stat-icon-amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin Navigation Tabs -->
+      <div class="toolbar" style="margin-bottom: 2rem;">
+        <div class="filter-tabs" role="tablist">
+          <button class="filter-tab admin-nav-tab active" data-tab="analytics" role="tab">
+            Analytics Overview
+          </button>
+          <button class="filter-tab admin-nav-tab" data-tab="manual-review" role="tab">
+            Manual Review &amp; Triage <span id="tab-badge-review" class="badge badge-review" style="display:none; font-size:0.65rem; margin-left:4px;">0</span>
+          </button>
+          <button class="filter-tab admin-nav-tab" data-tab="all-tickets" role="tab">
+            Campus Tickets Queue
+          </button>
+          <button class="filter-tab admin-nav-tab" data-tab="users" role="tab">
+            User Role Provisioning
+          </button>
+        </div>
+      </div>
+
+      <!-- PANE 1: Analytics Overview (Chart.js) -->
+      <section id="pane-analytics" class="admin-tab-pane">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+          <!-- Department Distribution -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h2 class="chart-title">Department-Wise Ticket Load</h2>
+              <span class="badge badge-nmc">Database Actuals</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-dept-dist"></canvas>
+            </div>
+          </div>
+
+          <!-- Status Breakdown -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h2 class="chart-title">Ticket Status Distribution</h2>
+              <span class="badge badge-ps">Status Ratio</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-status-dist"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Complaint Trends -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h2 class="chart-title">Monthly Grievance Volume Trend</h2>
+            <span class="badge badge-coe">Historical Logs</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart-monthly-trends"></canvas>
+          </div>
+        </div>
+
+        <div style="font-size: 0.775rem; color: var(--text-muted); text-align: center; margin-top: 1rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <em>Analytics Architecture Note:</em> Live metrics reflect authorized campus Firestore documents aggregated client-side. For enterprise archives exceeding 10,000 complaints, scheduled backend aggregation pipelines or BigQuery exports are recommended.
+        </div>
+      </section>
+
+      <!-- PANE 2: Manual Review Triage Queue -->
+      <section id="pane-manual-review" class="admin-tab-pane" style="display: none;">
+        <div class="card" style="margin-bottom: 1.5rem; border-left: 4px solid var(--color-review);">
+          <h2 style="font-size: 1.15rem; margin-bottom: 0.35rem;">Manual Review &amp; Triage Queue</h2>
+          <p style="font-size: 0.85rem;">
+            Complaints routed here had ambiguous keywords, equal scoring across departments, or unmapped descriptions. Administrators can assign the definitive department below.
+          </p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="tickets-table">
+            <thead>
+              <tr>
+                <th>Ticket #</th>
+                <th>Subject &amp; Snippet</th>
+                <th>Student</th>
+                <th>Flag Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="manual-review-tbody"></tbody>
+          </table>
+        </div>
+
+        <div id="manual-review-empty" class="empty-state" style="display: none;">
+          <div class="empty-state-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <h3 class="empty-state-title">No Tickets Pending Manual Review</h3>
+          <p class="empty-state-desc">All complaints have been successfully mapped and routed to official departments.</p>
+        </div>
+      </section>
+
+      <!-- PANE 3: All Campus Tickets Queue -->
+      <section id="pane-all-tickets" class="admin-tab-pane" style="display: none;">
+        <div class="toolbar">
+          <div class="flex items-center gap-3" style="width: 100%; justify-content: space-between; flex-wrap: wrap;">
+            <div class="search-input-wrapper" style="flex: 1; max-width: 380px;">
+              <span class="search-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </span>
+              <input type="text" id="all-tickets-search" class="form-control" placeholder="Search ticket #, student, or title..." style="font-size: 0.85rem;">
+            </div>
+
+            <div class="flex items-center gap-2">
+              <label for="all-tickets-dept-filter" style="font-size: 0.825rem; font-weight: 600;">Department:</label>
+              <select id="all-tickets-dept-filter" class="form-select" style="font-size: 0.85rem; padding: 0.45rem 0.85rem; width: auto;">
+                <option value="ALL">All Departments</option>
+                <option value="NMC">NMC (Network)</option>
+                <option value="PS">PS &amp; Student Affairs</option>
+                <option value="COE">Controller of Examinations</option>
+                <option value="Office Academics">Office of Academics</option>
+                <option value="manual-review">Manual Review</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="tickets-table">
+            <thead>
+              <tr>
+                <th>Ticket #</th>
+                <th>Subject &amp; Category</th>
+                <th>Department</th>
+                <th>Student</th>
+                <th>Status</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody id="all-tickets-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PANE 4: User Role Provisioning (Phase 5) -->
+      <section id="pane-users" class="admin-tab-pane" style="display: none;">
+        <div class="card" style="margin-bottom: 1.5rem;">
+          <h2 style="font-size: 1.15rem; margin-bottom: 0.35rem;">Institutional Role &amp; Department Provisioning</h2>
+          <p style="font-size: 0.85rem;">
+            As required by security guidelines, verified <code>@bitsathy.ac.in</code> accounts default to Student privileges. Administrators must explicitly authorize department technician or administrator roles.
+          </p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="tickets-table">
+            <thead>
+              <tr>
+                <th>Institutional User</th>
+                <th>Assigned Role</th>
+                <th>Department</th>
+                <th>Account Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Triage Modal -->
+  <div id="triage-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="triage-title">
+    <div class="modal-box" style="max-width: 580px;">
+      <div class="modal-header">
+        <h2 id="triage-title" class="modal-title">Triage &amp; Route Grievance</h2>
+        <button class="modal-close" onclick="document.getElementById('triage-modal').classList.remove('active');" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="background: var(--bg-surface-subtle); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Ticket # <span id="triage-ticket-num" class="ticket-number-mono"></span></div>
+          <div id="triage-ticket-title" style="font-weight: 700; margin: 0.25rem 0 0.5rem;"></div>
+          <p id="triage-ticket-desc" style="font-size: 0.85rem; color: var(--text-muted); margin: 0;"></p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="triage-target-dept">Assign Official Department <span class="required">*</span></label>
+          <select id="triage-target-dept" class="form-select"></select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="triage-notes">Triage Notes / Decision Rationale</label>
+          <textarea id="triage-notes" class="form-control" placeholder="Explain classification decision (e.g. Complaint pertains to switch port in Lab 3, assigned to NMC)..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('triage-modal').classList.remove('active');">Cancel</button>
+        <button id="btn-confirm-triage" class="btn btn-primary">Confirm Routing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Role Provisioning Modal -->
+  <div id="user-role-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="user-role-title">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <h2 id="user-role-title" class="modal-title">Provision User Role</h2>
+        <button class="modal-close" onclick="document.getElementById('user-role-modal').classList.remove('active');" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 1.25rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Institutional Account:</div>
+          <strong id="role-modal-user-email" style="font-size: 0.95rem; color: var(--text-main);"></strong>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="role-select">Role Assignment <span class="required">*</span></label>
+          <select id="role-select" class="form-select">
+            <option value="student">Student</option>
+            <option value="department">Department Staff</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="role-dept-group" style="display: none;">
+          <label class="form-label" for="role-dept-select">Assigned Department <span class="required">*</span></label>
+          <select id="role-dept-select" class="form-select">
+            <option value="NMC">Network Maintenance Cell (NMC)</option>
+            <option value="PS">Placement &amp; Student Affairs (PS)</option>
+            <option value="COE">Controller of Examinations (COE)</option>
+            <option value="Office Academics">Office of Academic Affairs</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem;">
+          <input type="checkbox" id="role-active-toggle" style="width: 18px; height: 18px; cursor: pointer;">
+          <label for="role-active-toggle" style="font-size: 0.875rem; font-weight: 600; cursor: pointer;">
+            Account Active (Permit login access)
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('user-role-modal').classList.remove('active');">Cancel</button>
+        <button id="btn-save-role-assignment" class="btn btn-primary">Save Role Assignment</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

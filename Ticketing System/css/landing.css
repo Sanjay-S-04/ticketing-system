@@ -1,0 +1,435 @@
+/**
+ * landing.css - Homepage & Presentation Styles
+ * Bannari Amman Institute of Technology Helpdesk
+ */
+
+/* Landing Navigation */
+.landing-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: all var(--transition-base);
+}
+
+[data-theme="dark"] .landing-nav {
+  background-color: rgba(17, 24, 39, 0.85);
+}
+
+.nav-inner {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.brand-emblem {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary-600), var(--purple-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.15rem;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
+
+.brand-text h1 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-main);
+}
+
+.brand-text span {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.nav-link {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.nav-link:hover {
+  color: var(--primary-600);
+}
+
+/* Hero Section */
+.hero-section {
+  padding: 5rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 350px;
+  background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.22), rgba(124, 58, 237, 0.15), transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary-600);
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+  color: var(--text-main);
+}
+
+.hero-gradient-text {
+  background: linear-gradient(135deg, var(--primary-600) 0%, var(--indigo-600) 50%, var(--purple-600) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 2.25rem;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.hero-demo-box {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-xl);
+  text-align: left;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.demo-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.demo-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.demo-input-row {
+  margin-bottom: 1rem;
+}
+
+.demo-result-card {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-top: 1rem;
+  transition: all var(--transition-base);
+}
+
+/* Official Departments Section */
+.departments-section {
+  padding: 4.5rem 0;
+  background-color: var(--bg-surface-subtle);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 3rem;
+}
+
+.section-tag {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary-600);
+  margin-bottom: 0.5rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.departments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.department-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.department-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.card-nmc::before { background: var(--color-nmc); }
+.card-ps::before { background: var(--color-ps); }
+.card-coe::before { background: var(--color-coe); }
+.card-academics::before { background: var(--color-academics); }
+
+.department-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-default);
+}
+
+.dept-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.dept-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.card-nmc .dept-icon-wrapper { background: var(--color-nmc-bg); color: var(--color-nmc); }
+.card-ps .dept-icon-wrapper { background: var(--color-ps-bg); color: var(--color-ps); }
+.card-coe .dept-icon-wrapper { background: var(--color-coe-bg); color: var(--color-coe); }
+.card-academics .dept-icon-wrapper { background: var(--color-academics-bg); color: var(--color-academics); }
+
+.dept-name {
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.dept-desc {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+}
+
+.dept-categories-list {
+  list-style: none;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.75rem;
+}
+
+.dept-categories-list li {
+  font-size: 0.8rem;
+  color: var(--text-main);
+  padding: 0.3rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dept-categories-list li::before {
+  content: '•';
+  color: var(--primary-600);
+  font-size: 1.2rem;
+  line-height: 0;
+}
+
+/* Workflow Stepper */
+.workflow-section {
+  padding: 5rem 0;
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  position: relative;
+}
+
+.workflow-step {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+
+.workflow-step:hover {
+  border-color: var(--primary-400);
+  transform: translateY(-2px);
+}
+
+.step-num {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--primary-600), var(--indigo-600));
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
+
+.step-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.step-desc {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Call to Action Section */
+.cta-section {
+  padding: 4.5rem 0;
+  background: linear-gradient(135deg, var(--primary-700), var(--indigo-800));
+  color: #ffffff;
+  text-align: center;
+  border-radius: var(--radius-xl);
+  margin-bottom: 4rem;
+  box-shadow: var(--shadow-xl);
+}
+
+.cta-title {
+  font-size: 2.25rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.cta-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 580px;
+  margin: 0 auto 2rem;
+  font-size: 1.05rem;
+}
+
+.cta-section .btn-primary {
+  background: #ffffff;
+  color: var(--primary-700);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.cta-section .btn-primary:hover {
+  background: #f8fafc;
+  color: var(--primary-800);
+}
+
+/* Institutional Footer */
+.site-footer {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  padding: 3rem 0 2rem;
+  font-size: 0.85rem;
+}
+
+.footer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .hero-title { font-size: 2.2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .cta-title { font-size: 1.75rem; }
+  .departments-grid, .workflow-grid { grid-template-columns: 1fr; }
+}

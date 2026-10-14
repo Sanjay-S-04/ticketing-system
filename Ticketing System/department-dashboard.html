@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Department Queue Management | Bannari Amman Institute of Technology</title>
+  <meta name="description" content="Department technician portal for triaging grievances, transitioning ticket status, recording resolution notes, and managing escalations.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- Dynamic Navigation Header -->
+  <div id="dashboard-nav-container"></div>
+
+  <main class="dashboard-main" role="main">
+    <div class="container">
+      <!-- Authorized Department Banner -->
+      <section class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(124, 58, 237, 0.05));">
+        <div class="flex items-center justify-between" style="flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div class="flex items-center gap-2" style="margin-bottom: 0.35rem;">
+              <span id="dept-banner-badge" class="badge badge-nmc">Authorized Queue</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Institutional Role Enforcement Active</span>
+            </div>
+            <h1 id="dept-banner-name" class="page-title">Department Queue</h1>
+            <p id="dept-banner-desc" class="page-subtitle" style="margin-top: 0.25rem;"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Department Metrics -->
+      <section class="stats-grid" aria-label="Department Queue Statistics">
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">Total Assigned</div>
+            <div class="stat-value" id="stat-total">0</div>
+          </div>
+          <div class="stat-icon stat-icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">New / Open</div>
+            <div class="stat-value" id="stat-open">0</div>
+          </div>
+          <div class="stat-icon stat-icon-amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">In Investigation</div>
+            <div class="stat-value" id="stat-progress">0</div>
+          </div>
+          <div class="stat-icon stat-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">Resolved</div>
+            <div class="stat-value" id="stat-resolved">0</div>
+          </div>
+          <div class="stat-icon stat-icon-green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Department Queue Section -->
+      <section aria-labelledby="dept-queue-heading">
+        <div class="toolbar">
+          <div>
+            <h2 id="dept-queue-heading" style="font-size: 1.35rem; margin-bottom: 0.25rem;">Assigned Grievance Queue</h2>
+            <p style="font-size: 0.85rem;">Review student submissions, execute permitted status transitions, and record resolution notes.</p>
+          </div>
+
+          <div class="flex items-center gap-3" style="flex-wrap: wrap;">
+            <div class="filter-tabs" role="tablist">
+              <button class="filter-tab active" data-filter="ALL" role="tab">All</button>
+              <button class="filter-tab" data-filter="OPEN" role="tab">Open</button>
+              <button class="filter-tab" data-filter="IN_PROGRESS" role="tab">In Progress</button>
+              <button class="filter-tab" data-filter="RESOLVED" role="tab">Resolved</button>
+              <button class="filter-tab" data-filter="ESCALATED" role="tab">Escalated</button>
+            </div>
+
+            <div>
+              <select id="dept-category-filter" class="form-select" style="font-size: 0.85rem; padding: 0.45rem 0.75rem; width: auto;" aria-label="Filter queue by category">
+                <option value="ALL">All Categories</option>
+              </select>
+            </div>
+
+            <div class="search-input-wrapper">
+              <span class="search-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </span>
+              <input type="text" id="dept-ticket-search" class="form-control" placeholder="Search student or ticket..." style="font-size: 0.85rem; padding-top: 0.5rem; padding-bottom: 0.5rem;">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="tickets-table">
+            <thead>
+              <tr>
+                <th>Ticket #</th>
+                <th>Subject &amp; Root Category</th>
+                <th>Student</th>
+                <th>Status</th>
+                <th>Filed On</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dept-tickets-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="dept-empty-state" class="empty-state" style="display: none;">
+          <div class="empty-state-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <h3 class="empty-state-title">No Department Tickets Found</h3>
+          <p class="empty-state-desc">The queue is currently clear for your department matching this filter.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Manage Ticket Modal -->
+  <div id="manage-ticket-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-ticket-title">
+    <div class="modal-box" style="max-width: 760px;">
+      <div class="modal-header">
+        <div>
+          <span id="modal-ticket-number" class="ticket-number-mono" style="font-size: 0.95rem;"></span>
+          <h2 id="modal-ticket-title" class="modal-title" style="margin-top: 2px;"></h2>
+        </div>
+        <button class="modal-close btn-close-manage-modal" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="flex items-center justify-between" style="margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div class="flex items-center gap-3">
+            <div><span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Status:</span> <span id="modal-ticket-status" class="badge"></span></div>
+            <div><span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Category:</span> <strong id="modal-ticket-category" style="font-size: 0.85rem;"></strong></div>
+          </div>
+
+          <!-- Permitted Action Buttons -->
+          <div id="modal-status-actions" class="flex items-center gap-2"></div>
+        </div>
+
+        <div style="background: var(--bg-surface-subtle); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.25rem;">Student Details:</div>
+          <div id="modal-ticket-student" style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.75rem;"></div>
+
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.25rem;">Complaint Description:</div>
+          <p id="modal-ticket-desc" style="color: var(--text-main); font-size: 0.9rem; white-space: pre-wrap; margin-bottom: 0.75rem;"></p>
+
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.25rem;">Matched Keywords:</div>
+          <div id="modal-keywords-container" class="keywords-cloud"></div>
+        </div>
+
+        <!-- Audit Timeline Subcollection -->
+        <div style="margin-bottom: 1.75rem;">
+          <h3 style="font-size: 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            Audit Trail
+          </h3>
+          <div id="modal-timeline-container" class="timeline-stepper"></div>
+        </div>
+
+        <!-- Remarks Subcollection -->
+        <div>
+          <h3 style="font-size: 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            Staff Remarks &amp; Student Discussion
+          </h3>
+          <div id="modal-comments-container" class="comments-thread"></div>
+
+          <form id="modal-comment-form" style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+            <input type="text" id="modal-comment-input" class="form-control" placeholder="Post technician remark or update for the student..." style="font-size: 0.85rem;" required>
+            <button type="submit" class="btn btn-primary btn-sm">Post Remark</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-close-manage-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Escalation / Transfer Modal -->
+  <div id="escalate-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="esc-title">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-header">
+        <h2 id="esc-title" class="modal-title">Escalate or Transfer Ticket</h2>
+        <button class="modal-close" onclick="document.getElementById('escalate-modal').classList.remove('active');" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="escalate-dept-select">Target Department <span class="required">*</span></label>
+          <select id="escalate-dept-select" class="form-select"></select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="escalate-reason">Escalation Rationale / Transfer Reason <span class="required">*</span></label>
+          <textarea id="escalate-reason" class="form-control" placeholder="Explain why this ticket is being transferred (e.g. requires network switch replacement by NMC, or requires COE approval)..." required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('escalate-modal').classList.remove('active');">Cancel</button>
+        <button id="btn-confirm-escalate" class="btn btn-danger">Confirm Transfer &amp; Escalate</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/department.js"></script>
+</body>
+</html>

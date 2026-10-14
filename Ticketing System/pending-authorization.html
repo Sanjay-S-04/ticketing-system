@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pending Authorization | Bannari Amman Institute of Technology Helpdesk</title>
+  <meta name="description" content="Your institutional account is pending administrative role authorization.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body class="login-page">
+
+  <main class="login-card" role="main" style="max-width: 520px;">
+    <div class="login-emblem" style="background: linear-gradient(135deg, var(--color-review), #b45309);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+    </div>
+
+    <h1 class="login-title" style="font-size: 1.5rem;">Authorization Pending</h1>
+    <p class="login-subtitle">Bannari Amman Institute of Technology</p>
+
+    <div class="alert alert-warning" style="text-align: left; margin-bottom: 1.5rem;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <div>
+        <strong>Awaiting Role Provisioning</strong><br>
+        Your institutional account (<code id="pending-user-email">@bitsathy.ac.in</code>) has been successfully authenticated. However, your role has not yet been provisioned by an institutional IT administrator.
+      </div>
+    </div>
+
+    <div style="background: var(--bg-surface-subtle); padding: 1.25rem; border-radius: var(--radius-md); text-align: left; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+      <p style="margin-bottom: 0.5rem;"><strong style="color: var(--text-main);">Why am I seeing this?</strong></p>
+      <p>Under BIT institutional security controls, having a valid <code>@bitsathy.ac.in</code> email does not automatically grant department technician or administrator access. Only students or authorized personnel assigned by IT administration may access departmental queues.</p>
+    </div>
+
+    <div class="flex items-center justify-center gap-3" style="flex-wrap: wrap;">
+      <button id="btn-check-status" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        Refresh Status
+      </button>
+
+      <button id="btn-logout" class="btn btn-secondary">
+        Sign Out
+      </button>
+    </div>
+
+    <div class="login-footer-info" style="margin-top: 2rem;">
+      <div>If you are faculty or staff requiring immediate department queue access, contact the IT cell: <code>admin.helpdesk@bitsathy.ac.in</code></div>
+      <div style="margin-top: 0.75rem;"><a href="index.html">&larr; Return to Homepage</a></div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initTheme, showToast } from './js/app.js';
+    import { getCurrentUserProfile, logoutUser, redirectByRole, getOrCreateUserProfile } from './js/auth.js';
+    import { auth, isFirebaseConfigured } from './js/firebase.js';
+
+    initTheme();
+
+    const user = getCurrentUserProfile();
+    if (user && user.email) {
+      document.getElementById('pending-user-email').textContent = user.email;
+    }
+
+    document.getElementById('btn-logout')?.addEventListener('click', () => {
+      logoutUser();
+    });
+
+    document.getElementById('btn-check-status')?.addEventListener('click', async () => {
+      showToast('Checking authorization status...', 'info');
+      try {
+        if (auth && isFirebaseConfigured() && auth.currentUser) {
+          const updated = await getOrCreateUserProfile(auth.currentUser);
+          if (updated && updated.role !== 'pending') {
+            showToast('Authorization approved! Redirecting...', 'success');
+            setTimeout(() => redirectByRole(updated), 800);
+            return;
+          }
+        }
+        showToast('Your account is still pending administrative approval.', 'warning');
+      } catch (err) {
+        showToast('Could not verify status. Please try again.', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

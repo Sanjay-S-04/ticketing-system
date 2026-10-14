@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intelligent Helpdesk Ticketing System | Bannari Amman Institute of Technology</title>
+  <meta name="description" content="Automated root-cause category mapping and ticket routing platform for students and departments of Bannari Amman Institute of Technology, Sathyamangalam.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="landing-nav" role="banner">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand-link" aria-label="BIT Helpdesk Home">
+        <div class="brand-emblem">BIT</div>
+        <div class="brand-text">
+          <h1>Helpdesk System</h1>
+          <span>Bannari Amman Institute of Technology</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" aria-label="Quick Links">
+        <a href="#departments" class="nav-link">Departments</a>
+        <a href="#how-it-works" class="nav-link">Workflow</a>
+        <a href="#classifier-demo" class="nav-link">Live Classifier</a>
+        <button class="btn-icon theme-toggle-btn" aria-label="Toggle Theme" title="Toggle Theme"></button>
+        <a href="login.html" class="btn btn-primary btn-sm">Institutional Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section" aria-labelledby="hero-title">
+      <div class="hero-glow"></div>
+      <div class="container hero-content">
+        <div class="hero-badge">
+          <span>BITSATHY Verified Helpdesk Platform</span>
+        </div>
+        <h1 id="hero-title" class="hero-title">
+          Intelligent Campus Helpdesk with <span class="hero-gradient-text">Automated Root-Cause Mapping</span>
+        </h1>
+        <p class="hero-subtitle">
+          Eliminate lost complaints and manual routing delays. Our explainable rule-based classification engine maps student technical and academic grievances directly to the responsible BIT department with complete audit transparency.
+        </p>
+
+        <div class="hero-actions">
+          <a href="login.html" class="btn btn-primary btn-lg">File a Complaint</a>
+          <a href="#classifier-demo" class="btn btn-secondary btn-lg">Test Classifier Live</a>
+        </div>
+
+        <!-- Interactive Classifier Simulator Preview -->
+        <div id="classifier-demo" class="hero-demo-box">
+          <div class="demo-box-header">
+            <span class="demo-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              Live Root-Cause Classification Simulator
+            </span>
+            <span class="badge badge-nmc" id="demo-method-badge">Rule-Based Engine v1</span>
+          </div>
+
+          <div class="demo-input-row">
+            <label class="form-label" for="demo-input">Type a sample campus complaint:</label>
+            <input type="text" id="demo-input" class="form-control" placeholder="e.g., Hostel wifi in D-block disconnected, or PCDP attendance absent" value="Hostel wifi disconnecting frequently in mechanical block">
+          </div>
+
+          <div class="demo-result-card" id="demo-result-box">
+            <div class="flex items-center justify-between" style="margin-bottom:0.5rem;">
+              <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Suggested Routing</span>
+              <span id="demo-target-dept" class="badge badge-nmc">Network Maintenance Cell (NMC)</span>
+            </div>
+            <div style="font-size:1.05rem; font-weight:700; color:var(--text-main); margin-bottom:0.5rem;" id="demo-target-category">
+              Wi-Fi and LAN
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.5rem;">
+              <strong>Matched Keywords:</strong> <span id="demo-matched-tags">#wifi, #hostel wifi</span>
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-subtle); font-style:italic;" id="demo-explain-note">
+              Deterministic rule match with highest relevance for NMC.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Official Departments Section -->
+    <section id="departments" class="departments-section" aria-labelledby="dept-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Official Routing Hierarchy</div>
+          <h2 id="dept-title" class="section-title">Four Dedicated Campus Departments</h2>
+          <p>Tickets are routed strictly to authorized BIT administrative units according to institutional domain responsibility.</p>
+        </div>
+
+        <div class="departments-grid">
+          <!-- NMC -->
+          <article class="department-card card-nmc">
+            <div class="dept-card-top">
+              <div class="dept-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+              </div>
+              <span class="badge badge-nmc">NMC</span>
+            </div>
+            <h3 class="dept-name">Network Maintenance Cell</h3>
+            <p class="dept-desc">Manages physical and wireless networking infrastructure across academic blocks and hostels.</p>
+            <ul class="dept-categories-list">
+              <li>Network connectivity</li>
+              <li>Wi-Fi and LAN</li>
+              <li>Network access points</li>
+              <li>Biometric system issues</li>
+            </ul>
+          </article>
+
+          <!-- PS -->
+          <article class="department-card card-ps">
+            <div class="dept-card-top">
+              <div class="dept-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+              </div>
+              <span class="badge badge-ps">PS</span>
+            </div>
+            <h3 class="dept-name">PS & Student Affairs</h3>
+            <p class="dept-desc">Resolves portal credentials, PCDP mobile application bugs, and student attendance discrepancies.</p>
+            <ul class="dept-categories-list">
+              <li>PS Portal</li>
+              <li>PCDP App</li>
+              <li>Attendance issues</li>
+            </ul>
+          </article>
+
+          <!-- COE -->
+          <article class="department-card card-coe">
+            <div class="dept-card-top">
+              <div class="dept-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+              </div>
+              <span class="badge badge-coe">COE</span>
+            </div>
+            <h3 class="dept-name">Controller of Examinations</h3>
+            <p class="dept-desc">Coordinates end-semester exams, hall tickets, timetable conflicts, revaluations, and grade cards.</p>
+            <ul class="dept-categories-list">
+              <li>Examination-related issues</li>
+              <li>Examination timetable</li>
+              <li>Results and grade-card issues</li>
+            </ul>
+          </article>
+
+          <!-- Office Academics -->
+          <article class="department-card card-academics">
+            <div class="dept-card-top">
+              <div class="dept-icon-wrapper">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              </div>
+              <span class="badge badge-academics">Academics</span>
+            </div>
+            <h3 class="dept-name">Office of Academic Affairs</h3>
+            <p class="dept-desc">Oversees undergraduate mini-projects, capstone project reviews, guide allocations, and curriculum coordination.</p>
+            <ul class="dept-categories-list">
+              <li>Mini-project issues</li>
+              <li>Academic project matters</li>
+              <li>Project-related academic coordination</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Complaint Workflow Stepper -->
+    <section id="how-it-works" class="workflow-section" aria-labelledby="workflow-title">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-tag">Complaint Lifecycle</div>
+          <h2 id="workflow-title" class="section-title">How the System Works</h2>
+          <p>Every grievance moves through a secure, traceable pipeline with subcollection audit history.</p>
+        </div>
+
+        <div class="workflow-grid">
+          <div class="workflow-step">
+            <div class="step-num">1</div>
+            <h3 class="step-title">Verified Sign-In</h3>
+            <p class="step-desc">Students authenticate securely using institutional <code>@bitsathy.ac.in</code> Google credentials.</p>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num">2</div>
+            <h3 class="step-title">Automated Mapping</h3>
+            <p class="step-desc">Deterministic keyword analysis recommends the exact root-cause category and target department in real-time.</p>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num">3</div>
+            <h3 class="step-title">Department Action</h3>
+            <p class="step-desc">Authorized technicians investigate, transition ticket status (Open → In Progress), and post remarks.</p>
+          </div>
+
+          <div class="workflow-step">
+            <div class="step-num">4</div>
+            <h3 class="step-title">Resolution & Audit</h3>
+            <p class="step-desc">Issues are resolved with mandatory resolution notes and archived in immutable timeline subcollections.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <div class="container">
+      <section class="cta-section" aria-labelledby="cta-title">
+        <h2 id="cta-title" class="cta-title">Ready to Submit or Manage a Grievance?</h2>
+        <p class="cta-subtitle">
+          Access the BIT Helpdesk using your verified institutional account. Role-based security guarantees data isolation between students and departments.
+        </p>
+        <a href="login.html" class="btn btn-primary btn-lg">Sign In with @bitsathy.ac.in</a>
+      </section>
+    </div>
+  </main>
+
+  <!-- Institutional Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-top">
+        <div class="brand-link">
+          <div class="brand-emblem">BIT</div>
+          <div class="brand-text">
+            <strong>Bannari Amman Institute of Technology</strong>
+            <div>Sathyamangalam - 638 401, Erode District, Tamil Nadu, India</div>
+          </div>
+        </div>
+        <div>
+          <span class="badge badge-nmc">Official CSE Capstone Project</span>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Bannari Amman Institute of Technology. All Rights Reserved.</div>
+        <div style="font-size:0.75rem;">
+          Supported Departments: NMC &bull; PS &bull; COE &bull; Office Academics &bull; Manual Review
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initTheme, toggleTheme } from './js/app.js';
+    import { classifyComplaint } from './js/classification.js';
+    import { getDepartmentById } from './js/data.js';
+
+    initTheme();
+
+    const demoInput = document.getElementById('demo-input');
+    const demoDept = document.getElementById('demo-target-dept');
+    const demoCat = document.getElementById('demo-target-category');
+    const demoTags = document.getElementById('demo-matched-tags');
+    const demoNote = document.getElementById('demo-explain-note');
+
+    function updateDemo() {
+      const text = demoInput.value;
+      const res = classifyComplaint(text, '');
+      const dept = getDepartmentById(res.suggestedDepartmentId);
+
+      demoDept.className = `badge ${dept.badgeClass}`;
+      demoDept.textContent = dept.name;
+      demoCat.textContent = res.suggestedCategory;
+      demoTags.textContent = res.matchedKeywords.length ? res.matchedKeywords.map(k => '#' + k).join(', ') : 'None (Manual Review Fallback)';
+      demoNote.textContent = res.confidenceNote;
+    }
+
+    demoInput?.addEventListener('input', updateDemo);
+    updateDemo();
+  </script>
+</body>
+</html>

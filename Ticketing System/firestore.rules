@@ -1,0 +1,206 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isInstitutionalEmail() {
+      return isAuthenticated() &&
+        request.auth.token.email != null &&
+        request.auth.token.email.matches('^[a-zA-Z0-9._%+-]+@bitsathy\\.ac\\.in$');
+    }
+
+    function getUserDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function getUserData() {
+      return getUserDoc().data;
+    }
+
+    function hasUserDoc() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return isInstitutionalEmail() &&
+        hasUserDoc() &&
+        getUserData().role == 'admin' &&
+        getUserData().active == true;
+    }
+
+    function isDepartmentStaff(deptId) {
+      return isInstitutionalEmail() &&
+        hasUserDoc() &&
+        getUserData().role == 'department' &&
+        getUserData().active == true &&
+        (
+          getUserData().departmentId == deptId ||
+          (getUserData().departmentId == 'NMC' && deptId == 'nmc') ||
+          (getUserData().departmentId == 'PS' && deptId == 'ps') ||
+          (getUserData().departmentId == 'COE' && deptId == 'coe') ||
+          (getUserData().departmentId == 'Office Academics' && (deptId == 'office_academics' || deptId == 'academics')) ||
+          (getUserData().departmentId == 'manual-review' && deptId == 'manual_review')
+        );
+    }
+
+    function isAnyDepartmentStaff() {
+      return isInstitutionalEmail() &&
+        hasUserDoc() &&
+        getUserData().role == 'department' &&
+        getUserData().active == true;
+    }
+
+    function isStudent() {
+      return isInstitutionalEmail() &&
+        hasUserDoc() &&
+        getUserData().role == 'student' &&
+        getUserData().active == true;
+    }
+
+    // Default deny all other paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // -------------------------------------------------------------
+    // USERS COLLECTION
+    // -------------------------------------------------------------
+    match /users/{userId} {
+      // Any authenticated user can read their own profile; admins can read any profile
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+
+      // Initial user profile creation during first sign-in
+      // Self-registration can ONLY set role to 'student' (or 'pending') and departmentId to null
+      allow create: if isInstitutionalEmail() &&
+        request.auth.uid == userId &&
+        request.resource.data.email == request.auth.token.email &&
+        (request.resource.data.role == 'student' || request.resource.data.role == 'pending') &&
+        request.resource.data.departmentId == null &&
+        request.resource.data.active == true;
+
+      // Profile updates:
+      // Admins can update roles, department assignment, and active status
+      // Standard users can ONLY update their own displayName or theme, NEVER role or department
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        (
+          request.auth.uid == userId &&
+          request.resource.data.role == resource.data.role &&
+          request.resource.data.departmentId == resource.data.departmentId &&
+          request.resource.data.active == resource.data.active &&
+          request.resource.data.email == resource.data.email
+        )
+      );
+
+      // Only administrators can delete a user record
+      allow delete: if isAdmin();
+    }
+
+    // -------------------------------------------------------------
+    // TICKETS COLLECTION
+    // -------------------------------------------------------------
+    match /tickets/{ticketId} {
+      // Read rules:
+      // - Admins can read all tickets
+      // - Students can ONLY read tickets they created
+      // - Department staff can ONLY read tickets assigned to their department
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        (isStudent() && resource.data.userId == request.auth.uid) ||
+        isDepartmentStaff(resource.data.departmentId)
+      );
+
+      // Create rules:
+      // Authenticated institutional students (or staff/admin) can create tickets
+      // Must set userId to auth.uid, userEmail to verified institutional email, and status to OPEN
+      allow create: if isInstitutionalEmail() &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.userEmail == request.auth.token.email &&
+        request.resource.data.status == 'OPEN' &&
+        request.resource.data.ticketNumber is string &&
+        request.resource.data.title is string &&
+        request.resource.data.description is string &&
+        request.resource.data.departmentId in [
+          'NMC', 'PS', 'COE', 'Office Academics', 'manual-review',
+          'nmc', 'ps', 'coe', 'office_academics', 'manual_review'
+        ];
+
+      // Update rules:
+      // - Admin has full update authority
+      // - Ticket owner (student) can only edit title/description if ticket is still OPEN; cannot change status or reassign
+      // - Assigned department staff can update status (OPEN, IN_PROGRESS, RESOLVED, ESCALATED), add resolutionNotes, or reassign department
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        (
+          // Student editing their own open ticket
+          isStudent() &&
+          resource.data.userId == request.auth.uid &&
+          resource.data.status == 'OPEN' &&
+          request.resource.data.userId == resource.data.userId &&
+          request.resource.data.ticketNumber == resource.data.ticketNumber &&
+          request.resource.data.status == resource.data.status
+        ) ||
+        (
+          // Department staff managing ticket in their department
+          isDepartmentStaff(resource.data.departmentId) &&
+          request.resource.data.userId == resource.data.userId &&
+          request.resource.data.ticketNumber == resource.data.ticketNumber &&
+          request.resource.data.status in ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'ESCALATED']
+        )
+      );
+
+      // Deletion is strictly restricted to Admins
+      allow delete: if isAdmin();
+
+      // -----------------------------------------------------------
+      // COMMENTS SUBCOLLECTION
+      // -----------------------------------------------------------
+      match /comments/{commentId} {
+        // Read comments if user has read access to parent ticket
+        allow read: if isAuthenticated() && (
+          isAdmin() ||
+          (isStudent() && get(/databases/$(database)/documents/tickets/$(ticketId)).data.userId == request.auth.uid) ||
+          isDepartmentStaff(get(/databases/$(database)/documents/tickets/$(ticketId)).data.departmentId)
+        );
+
+        // Add comments: Owner student, assigned department staff, or Admin
+        allow create: if isAuthenticated() &&
+          request.resource.data.senderUid == request.auth.uid &&
+          request.resource.data.body is string &&
+          request.resource.data.body.size() > 0 &&
+          (
+            isAdmin() ||
+            (isStudent() && get(/databases/$(database)/documents/tickets/$(ticketId)).data.userId == request.auth.uid) ||
+            isDepartmentStaff(get(/databases/$(database)/documents/tickets/$(ticketId)).data.departmentId)
+          );
+
+        // Comments are immutable audit records
+        allow update, delete: if false;
+      }
+
+      // -----------------------------------------------------------
+      // TIMELINE SUBCOLLECTION
+      // -----------------------------------------------------------
+      match /timeline/{eventId} {
+        // Read timeline if user has read access to parent ticket
+        allow read: if isAuthenticated() && (
+          isAdmin() ||
+          (isStudent() && get(/databases/$(database)/documents/tickets/$(ticketId)).data.userId == request.auth.uid) ||
+          isDepartmentStaff(get(/databases/$(database)/documents/tickets/$(ticketId)).data.departmentId)
+        );
+
+        // Create timeline entry when performing ticket actions
+        allow create: if isAuthenticated() &&
+          request.resource.data.actorUid == request.auth.uid &&
+          request.resource.data.action is string;
+
+        // Timeline is tamper-proof audit trail
+        allow update, delete: if false;
+      }
+    }
+  }
+}

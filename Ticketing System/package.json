@@ -1,0 +1,30 @@
+{
+  "name": "intelligent-helpdesk-ticketing-system",
+  "version": "1.0.0",
+  "description": "Intelligent Helpdesk Ticketing System with Automated Root-Cause Category Mapping for Bannari Amman Institute of Technology",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/classification.test.js",
+    "test:rules": "node tests/firestore-rules.test.js",
+    "test:tickets": "node --experimental-network-imports --test tests/ticket-service.test.js",
+    "test:persona": "node --experimental-network-imports --test tests/persona-submission.test.js",
+    "test:e2e": "node --experimental-network-imports --test tests/e2e-workflow.test.js",
+    "test:all": "node --test tests/classification.test.js && node tests/firestore-rules.test.js && node --experimental-network-imports --test tests/ticket-service.test.js && node --experimental-network-imports --test tests/persona-submission.test.js && node --experimental-network-imports --test tests/e2e-workflow.test.js",
+    "serve": "node scripts/serve.js",
+    "emulators": "firebase emulators:start --only firestore,auth,hosting",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:rules": "firebase deploy --only firestore:rules,firestore:indexes",
+    "deploy": "firebase deploy"
+  },
+  "keywords": [
+    "helpdesk",
+    "ticketing-system",
+    "bitsathy",
+    "firestore",
+    "firebase-auth",
+    "root-cause-classification",
+    "chartjs"
+  ],
+  "author": "Bannari Amman Institute of Technology",
+  "license": "MIT"
+}

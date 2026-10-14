@@ -1,0 +1,146 @@
+/**
+ * variables.css - Design System Tokens & Color Palette
+ * Bannari Amman Institute of Technology Helpdesk
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Brand Palette: Blue, Indigo, Purple */
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-200: #bfdbfe;
+  --primary-300: #93c5fd;
+  --primary-400: #60a5fa;
+  --primary-500: #3b82f6;
+  --primary-600: #2563eb;
+  --primary-700: #1d4ed8;
+  --primary-800: #1e40af;
+  --primary-900: #1e3a8a;
+
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --purple-700: #7e22ce;
+
+  /* Department Semantic Colors */
+  --color-nmc: #2563eb;       /* Blue */
+  --color-nmc-bg: #eff6ff;
+  --color-nmc-border: #bfdbfe;
+
+  --color-ps: #7c3aed;        /* Purple */
+  --color-ps-bg: #f5f3ff;
+  --color-ps-border: #ddd6fe;
+
+  --color-coe: #0891b2;       /* Cyan / Deep Teal */
+  --color-coe-bg: #ecfeff;
+  --color-coe-border: #a5f3fc;
+
+  --color-academics: #059669; /* Emerald Green */
+  --color-academics-bg: #ecfdf5;
+  --color-academics-border: #a7f3d0;
+
+  --color-review: #d97706;    /* Amber */
+  --color-review-bg: #fffbeb;
+  --color-review-border: #fde68a;
+
+  /* Status Colors */
+  --status-open: #2563eb;
+  --status-open-bg: #eff6ff;
+  --status-progress: #d97706;
+  --status-progress-bg: #fffbeb;
+  --status-resolved: #16a34a;
+  --status-resolved-bg: #f0fdf4;
+  --status-escalated: #dc2626;
+  --status-escalated-bg: #fef2f2;
+
+  /* Neutral Surface Palette (Light Mode Default) */
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-subtle: #f1f5f9;
+  --bg-surface-hover: #f8fafc;
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --border-subtle: #e2e8f0;
+  --border-default: #cbd5e1;
+  --border-strong: #94a3b8;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+  --shadow-glow: 0 0 25px -5px rgba(37, 99, 235, 0.35);
+
+  /* Layout & Geometry */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --header-height: 70px;
+  --sidebar-width: 260px;
+  --max-content-width: 1360px;
+
+  /* Typography */
+  --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] {
+  --bg-app: #0b0f19;
+  --bg-surface: #111827;
+  --bg-surface-elevated: #1f2937;
+  --bg-surface-subtle: #1e293b;
+  --bg-surface-hover: #243247;
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+  --text-inverse: #0b0f19;
+
+  --border-subtle: #1e293b;
+  --border-default: #334155;
+  --border-strong: #475569;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.7), 0 8px 10px -6px rgb(0 0 0 / 0.6);
+  --shadow-glow: 0 0 30px -5px rgba(99, 102, 241, 0.45);
+
+  /* Dark mode department background tints */
+  --color-nmc-bg: rgba(37, 99, 235, 0.15);
+  --color-nmc-border: rgba(37, 99, 235, 0.3);
+
+  --color-ps-bg: rgba(124, 58, 237, 0.15);
+  --color-ps-border: rgba(124, 58, 237, 0.3);
+
+  --color-coe-bg: rgba(8, 145, 178, 0.15);
+  --color-coe-border: rgba(8, 145, 178, 0.3);
+
+  --color-academics-bg: rgba(5, 150, 105, 0.15);
+  --color-academics-border: rgba(5, 150, 105, 0.3);
+
+  --color-review-bg: rgba(217, 119, 6, 0.15);
+  --color-review-border: rgba(217, 119, 6, 0.3);
+
+  --status-open-bg: rgba(37, 99, 235, 0.2);
+  --status-progress-bg: rgba(217, 119, 6, 0.2);
+  --status-resolved-bg: rgba(22, 163, 74, 0.2);
+  --status-escalated-bg: rgba(220, 38, 38, 0.2);
+}

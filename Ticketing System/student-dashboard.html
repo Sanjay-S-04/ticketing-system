@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Grievance Portal | Bannari Amman Institute of Technology</title>
+  <meta name="description" content="Submit technical and academic complaints, view real-time department category mapping, and track ticket status.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+  <!-- Dynamic Navigation Header -->
+  <div id="dashboard-nav-container"></div>
+
+  <main class="dashboard-main" role="main">
+    <div class="container">
+      <div class="dashboard-header">
+        <div>
+          <h1 class="page-title">Student Helpdesk Portal</h1>
+          <p class="page-subtitle">File academic or technical issues with automated root-cause category recommendation.</p>
+        </div>
+      </div>
+
+      <!-- Quick Metrics -->
+      <section class="stats-grid" aria-label="Personal Ticket Statistics">
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">Total Filed</div>
+            <div class="stat-value" id="stat-total">0</div>
+          </div>
+          <div class="stat-icon stat-icon-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">Open / Pending</div>
+            <div class="stat-value" id="stat-open">0</div>
+          </div>
+          <div class="stat-icon stat-icon-amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">In Progress</div>
+            <div class="stat-value" id="stat-progress">0</div>
+          </div>
+          <div class="stat-icon stat-icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-label">Resolved</div>
+            <div class="stat-value" id="stat-resolved">0</div>
+          </div>
+          <div class="stat-icon stat-icon-green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit New Complaint Form -->
+      <section class="card" style="margin-bottom: 2.5rem;" aria-labelledby="form-heading">
+        <h2 id="form-heading" style="font-size: 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          File a New Complaint
+        </h2>
+
+        <form id="submit-ticket-form">
+          <div class="form-group">
+            <label class="form-label" for="ticket-title">
+              Complaint Subject / Title <span class="required">*</span>
+            </label>
+            <input type="text" id="ticket-title" class="form-control" placeholder="Brief summary of the issue (e.g., Hostel Wi-Fi down in C-Block, or Attendance marked absent)" required autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="ticket-description">
+              Detailed Description <span class="required">*</span>
+            </label>
+            <textarea id="ticket-description" class="form-control" placeholder="Provide complete facts (specific location, computer lab #, exam code, time, or app version)..." required></textarea>
+            <div class="form-hint">The root-cause classification engine evaluates your complaint text in real-time as you type.</div>
+          </div>
+
+          <!-- Real-Time Classification Assistant Card -->
+          <div id="classification-panel" class="classification-panel" style="display: none;">
+            <div class="classification-panel-header">
+              <span class="classification-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                Automated Root-Cause Recommendation
+              </span>
+              <span class="badge badge-nmc" style="font-size: 0.65rem;">Rule-Based Engine</span>
+            </div>
+
+            <div class="recommendation-grid">
+              <div class="recommendation-box">
+                <div class="rec-label">Target Department</div>
+                <div class="rec-value">
+                  <span id="rec-dept-badge" class="badge badge-nmc">Network Maintenance Cell (NMC)</span>
+                </div>
+              </div>
+
+              <div class="recommendation-box">
+                <div class="rec-label">Category (You may adjust if needed)</div>
+                <select id="rec-category-select" class="form-select" style="padding: 0.4rem 0.6rem; font-size: 0.85rem; font-weight: 600;">
+                  <!-- Dynamically populated from department categories -->
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.725rem; color: var(--text-muted); text-transform: uppercase;">Matched Keywords:</div>
+              <div id="rec-keywords-container" class="keywords-cloud"></div>
+            </div>
+
+            <div id="rec-note" class="classifier-note"></div>
+          </div>
+
+          <button type="submit" id="btn-submit-ticket" class="btn btn-primary btn-lg">
+            Submit Complaint
+          </button>
+        </form>
+      </section>
+
+      <!-- Personal Tickets Queue -->
+      <section aria-labelledby="queue-heading">
+        <div class="toolbar">
+          <div>
+            <h2 id="queue-heading" style="font-size: 1.35rem; margin-bottom: 0.25rem;">My Submitted Tickets</h2>
+            <p style="font-size: 0.85rem;">Track real-time status, technician remarks, and audit timeline.</p>
+          </div>
+
+          <div class="flex items-center gap-3" style="flex-wrap: wrap;">
+            <div class="filter-tabs" role="tablist">
+              <button class="filter-tab active" data-filter="ALL" role="tab">All</button>
+              <button class="filter-tab" data-filter="OPEN" role="tab">Open</button>
+              <button class="filter-tab" data-filter="IN_PROGRESS" role="tab">In Progress</button>
+              <button class="filter-tab" data-filter="RESOLVED" role="tab">Resolved</button>
+            </div>
+
+            <div>
+              <select id="ticket-category-filter" class="form-select" style="font-size: 0.85rem; padding: 0.45rem 0.75rem; width: auto;" aria-label="Filter by category">
+                <option value="ALL">All Categories</option>
+              </select>
+            </div>
+
+            <div class="search-input-wrapper">
+              <span class="search-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </span>
+              <input type="text" id="ticket-search" class="form-control" placeholder="Search ticket # or title..." style="font-size: 0.85rem; padding-top: 0.5rem; padding-bottom: 0.5rem;">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="tickets-table">
+            <thead>
+              <tr>
+                <th>Ticket #</th>
+                <th>Subject &amp; Category</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Filed On</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="student-tickets-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="student-empty-state" class="empty-state" style="display: none;">
+          <div class="empty-state-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path></svg>
+          </div>
+          <h3 class="empty-state-title">No Complaints Found</h3>
+          <p class="empty-state-desc">You haven't submitted any complaints matching this filter yet. Use the form above to file a grievance.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Ticket Detail & Subcollection Modal -->
+  <div id="ticket-details-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-ticket-title">
+    <div class="modal-box" style="max-width: 720px;">
+      <div class="modal-header">
+        <div>
+          <span id="modal-ticket-number" class="ticket-number-mono" style="font-size: 0.95rem;"></span>
+          <h2 id="modal-ticket-title" class="modal-title" style="margin-top: 2px;"></h2>
+        </div>
+        <button class="modal-close btn-close-ticket-modal" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="flex items-center gap-3" style="margin-bottom: 1.25rem; flex-wrap: wrap;">
+          <div><span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Department:</span> <span id="modal-ticket-dept" class="badge"></span></div>
+          <div><span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Category:</span> <strong id="modal-ticket-category" style="font-size: 0.85rem;"></strong></div>
+          <div><span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Status:</span> <span id="modal-ticket-status" class="badge"></span></div>
+        </div>
+
+        <div style="background: var(--bg-surface-subtle); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.25rem;">Complaint Description:</div>
+          <p id="modal-ticket-desc" style="color: var(--text-main); font-size: 0.9rem; white-space: pre-wrap;"></p>
+        </div>
+
+        <!-- Resolution Notes Box (shown if resolved) -->
+        <div id="modal-resolution-box" class="alert alert-success" style="display: none; margin-bottom: 1.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <div>
+            <strong>Department Resolution Notes:</strong>
+            <div id="modal-resolution-notes" style="margin-top: 0.25rem; font-size: 0.85rem;"></div>
+          </div>
+        </div>
+
+        <!-- Audit Timeline Subcollection -->
+        <div style="margin-bottom: 1.75rem;">
+          <h3 style="font-size: 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            Audit Timeline
+          </h3>
+          <div id="modal-timeline-container" class="timeline-stepper">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Comments Discussion Thread Subcollection -->
+        <div>
+          <h3 style="font-size: 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            Technician Remarks &amp; Student Comments
+          </h3>
+          <div id="modal-comments-container" class="comments-thread">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Add comment input -->
+          <form id="modal-comment-form" style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+            <input type="text" id="modal-comment-input" class="form-control" placeholder="Add additional details or reply to staff remarks..." style="font-size: 0.85rem;" required>
+            <button type="submit" class="btn btn-primary btn-sm">Post</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-close-ticket-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/student.js"></script>
+</body>
+</html>
