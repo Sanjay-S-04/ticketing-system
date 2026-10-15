@@ -248,20 +248,35 @@ export function injectFirebaseSetupModal() {
     saveBtn.addEventListener('click', () => {
       const val = document.getElementById('cfg-json').value.trim();
       try {
-        const parsed = JSON.parse(val);
-        if (!parsed.apiKey) throw new Error('Missing apiKey');
+        let parsed = null;
+        try {
+          parsed = JSON.parse(val);
+        } catch (_) {
+          // If not strict JSON, parse JS object or regex match
+          const fields = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId', 'measurementId'];
+          const extracted = {};
+          for (const f of fields) {
+            const m = val.match(new RegExp(`["']?${f}["']?\\s*:\\s*["']([^"']+)["']`));
+            if (m && m[1]) extracted[f] = m[1].trim();
+          }
+          if (extracted.apiKey && extracted.projectId) {
+            parsed = extracted;
+          }
+        }
+
+        if (!parsed || !parsed.apiKey) throw new Error('Missing apiKey');
         saveFirebaseConfig(parsed);
         showToast('Firebase configuration saved successfully! Reloading...', 'success');
         setTimeout(() => window.location.reload(), 1000);
       } catch (err) {
-        showToast('Invalid JSON. Please paste the exact config object from Firebase Console.', 'error');
+        showToast('Invalid configuration. Please paste the config from Firebase Console.', 'error');
       }
     });
   }
 }
 
 // Global initialization
-document.addEventListener('DOMContentLoaded', () => {
+function initApp() {
   initTheme();
   injectFirebaseSetupModal();
 
@@ -275,4 +290,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}

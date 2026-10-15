@@ -147,7 +147,19 @@
       } catch (err) {
         console.error('Sign-in error:', err);
         alertBox.style.display = 'flex';
-        alertText.textContent = err.message || 'Authentication failed. Please verify institutional account domain.';
+        const msg = err.message || '';
+        if (msg.includes('api-key-not-valid') || msg.includes('invalid-api-key')) {
+          alertText.innerHTML = `
+            <strong>Firebase API Key Mismatch</strong><br>
+            The API key in <code>js/firebase.js</code> does not match your Firebase project or has typographical errors.<br>
+            <button id="btn-quick-paste" class="btn btn-sm btn-primary" style="margin-top:0.6rem; font-size:0.75rem;">⚙️ Click here to paste Firebase Console config</button>
+          `;
+          document.getElementById('btn-quick-paste')?.addEventListener('click', () => {
+            openModal('firebase-setup-modal');
+          });
+        } else {
+          alertText.textContent = msg || 'Authentication failed. Please verify institutional account domain.';
+        }
         showToast('Authentication failed.', 'error');
       } finally {
         googleBtn.disabled = false;
